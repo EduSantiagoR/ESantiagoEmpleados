@@ -1,0 +1,79 @@
+﻿@model ML.Empleado
+@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center">Formulario de empleados</h2>
+<hr />
+<div>
+    @using (Html.BeginForm("Form", "Empleado", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(model => model.ClaveEmpleado)
+        <div class="row mb-3">
+            <div class="col col-4">
+                <label>Clave de empleado</label>
+                @if (Model.ClaveEmpleado != null)
+                {
+                    @Html.TextBoxFor(model => model.ClaveEmpleado, new { @class = "form-control", @disabled = "true" })
+                    <input hidden value="update" name="action" />
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.ClaveEmpleado, new { @class = "form-control" })
+                    <input hidden value="add" name="action" />
+                }
+            </div>
+            <div class="col col-4">
+                <label>Nombre</label>
+                @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control" })
+            </div>
+            <div class="col col-4">
+                <label>Apellido paterno</label>
+                @Html.TextBoxFor(model => model.ApellidoPaterno, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col col-4">
+                <label>Apellido materno</label>
+                @Html.TextBoxFor(model => model.ApellidoMaterno, new { @class = "form-control" })
+            </div>
+            <div class="col col-4">
+                <label>Fecha de ingreso</label>
+                @Html.TextBoxFor(model => model.FechaIngreso, new { @class = "form-control" })
+            </div>
+            <div class="col col-4">
+                <label>Fecha de nacimiento</label>
+                @Html.TextBoxFor(model => model.FechaNacimiento, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col col-4">
+                <label>Departamento</label>
+                @Html.DropDownListFor(model => model.Departamento.ClaveDepartamento, new SelectList(Model.Departamento.Departamentos, "ClaveDepartamento", "Descripcion"), "Selecciona un departamento", new { @class = "form-control" })
+            </div>
+            <div class="col col-4">
+                <label>Sueldo mensual</label>
+                @Html.TextBoxFor(model => model.Sueldo.SueldoMensual, new { @class = "form-control" })
+            </div>
+            <div class="col col-4">
+                <label>Forma de pago</label>
+                @Html.DropDownListFor(model => model.Sueldo.FormaPago, FormasDePago(), "Selecciona una forma de pago", new {@class="form-control"})
+            </div>
+        </div>
+        <div>
+            <a class="btn btn-danger" href="@Url.Action("GetAll", "Empleado")">Volver</a>
+            <button class="btn btn-success" type="submit">Guardar</button>
+        </div>
+    }
+    @functions{
+        private SelectList FormasDePago()
+        {
+            var formasDePago = new List<SelectListItem> {
+                new SelectListItem { Text = "Efectivo", Value = "Efectivo"},
+                new SelectListItem { Text = "Transferencia", Value = "Transferencia"}
+            };
+            return new SelectList(formasDePago, "Value", "Text");
+        }
+    }
+</div>
